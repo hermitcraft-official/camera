@@ -1,0 +1,1 @@
+scoreboard objectives add camera trigger "Camera Mode"

@@ -1,0 +1,16 @@
+{
+    "pack": {
+        "pack_format": 15,
+        "supported_formats": {
+            "min_inclusive": 15,
+            "max_inclusive": 41
+        },
+        "description": [
+            "",
+            {
+                "text": "Camera 1.0 for MC 1.20.x",
+                "color": "gold"
+            }
+        ]
+    }
+}

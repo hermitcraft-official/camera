@@ -1,0 +1,7 @@
+{
+    "replace": false,
+    "values": [
+        "camera:load",
+        "camera:tick"
+    ]
+}
