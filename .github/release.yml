@@ -1,0 +1,60 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    if: "startsWith(github.event.head_commit.message, 'release: ')"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get the last release tag
+        id: get_last_release
+        run: |
+          last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo "last_tag=$last_tag" >> $GITHUB_ENV
+
+      - name: Compute new version
+        id: compute_version
+        run: |
+          if [ -z "$last_tag" ]; then
+            new_version="v1.0"
+          else
+            last_version_number=$(echo $last_tag | cut -d'v' -f2)
+            last_version_major=$(echo $last_version_number | cut -d'.' -f1)
+            last_version_minor=$(echo $last_version_number | cut -d'.' -f2)
+            new_version_minor=$((last_version_minor + 1))
+            new_version="v${last_version_major}.${new_version_minor}"
+          fi
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+      - name: Extract release title
+        id: extract_title
+        run: |
+          commit_msg=$(git log -1 --pretty=%B)
+          release_title=$(echo $commit_msg | sed -e 's/^release: //')
+          echo "release_title=$release_title" >> $GITHUB_ENV
+
+      - name: Generate release notes
+        id: generate_notes
+        run: |
+          release_notes="### [Download $new_version](https://github.com/${{ github.repository }}/archive/refs/tags/$new_version.zip)\n\n"
+          commits=$(git log --pretty=format:"* [%h](https://github.com/${{ github.repository }}/commit/%H) %s" $last_tag..HEAD)
+          release_notes+=$commits
+          echo "release_notes=$release_notes" >> $GITHUB_ENV
+
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.new_version }}
+          release_name: "${{ env.new_version }}: ${{ env.release_title }}"
+          body: ${{ env.release_notes }}
+          draft: false
+          prerelease: false
