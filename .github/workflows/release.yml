@@ -53,13 +53,14 @@ jobs:
           echo "$release_notes" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Create GitHub release
-        uses: actions/create-release@v1
+      - name: Create release
+        uses: softprops/action-gh-release@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           tag_name: ${{ env.new_version }}
-          release_name: "${{ env.new_version }}: ${{ env.release_title }}"
+          name: "${{ env.new_version }}: ${{ env.release_title }}"
           body: ${{ env.release_notes }}
           draft: false
           prerelease: false
+          make_latest: true
