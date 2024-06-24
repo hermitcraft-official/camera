@@ -49,9 +49,7 @@ jobs:
           commits=$(git log --pretty=format:"* [%h](https://github.com/${{ github.repository }}/commit/%H) %s" $last_tag..HEAD)
           commits=$(echo "$commits" | sed -e 's/release: //')
           release_notes+=$commits
-          echo "release_notes<<EOF" >> $GITHUB_ENV
-          echo "$release_notes" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo -e "$release_notes" > CHANGELOG.md
 
       - name: Create release
         uses: softprops/action-gh-release@v2
@@ -60,7 +58,7 @@ jobs:
         with:
           tag_name: ${{ env.new_version }}
           name: "${{ env.new_version }}: ${{ env.release_title }}"
-          body: ${{ env.release_notes }}
+          body_path: ./CHANGELOG.md
           draft: false
           prerelease: false
           make_latest: true
