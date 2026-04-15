@@ -1,0 +1,8 @@
+{
+    "values": [
+        {
+            "id": "camera:quick_actions",
+            "required": false
+        }
+    ]
+}

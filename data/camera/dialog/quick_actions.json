@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:multi_action",
+    "title": "Camera Triggers",
+    "external_title": "Camera",
+    "columns": 2,
+    "actions": [
+        {
+            "label": "Camera Toggle",
+            "tooltip": [
+                "",
+                {
+                    "text": "`/trigger camera`",
+                    "color": "yellow"
+                },
+                "\n\n",
+                {
+                    "text": "Switch between spectator and survival."
+                }
+            ],
+            "action": {
+                "type": "minecraft:run_command",
+                "command": "/trigger camera"
+            }
+        }
+    ],
+    "exit_action": {
+        "action": {
+            "type": "show_dialog",
+            "dialog": "minecraft:quick_actions"
+        },
+        "label": {
+            "translate": "gui.back"
+        },
+        "width": 200
+    }
+}
